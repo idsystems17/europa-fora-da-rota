@@ -49,6 +49,13 @@ svg.i{width:16px;height:16px;flex:none;vertical-align:-3px}
 .strip button:hover{border-color:#8fb7bc;color:#fff}
 .strip .sp{flex:1}
 
+/* banner melhorias */
+.mbanner{display:block;background:var(--orange);color:#2b1a05;font-size:14px;transition:background .15s}
+.mbanner:hover{background:var(--orange-d)}
+.mbanner .wrap{display:flex;align-items:center;gap:10px;min-height:42px;padding-top:6px;padding-bottom:6px}
+.mbanner b{font-weight:700}
+.mbanner .mb-go{margin-left:auto;font-weight:700;white-space:nowrap;background:rgba(255,255,255,.45);padding:3px 12px;border-radius:999px}
+
 /* header */
 header.top{position:sticky;top:0;z-index:40;background:rgba(251,250,246,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 header.top .wrap{display:flex;align-items:center;gap:16px;height:60px}
@@ -300,6 +307,8 @@ footer.ft .row a:hover{color:var(--teal)}
   <button onclick="openIndex()">Índice de telas</button>
   <button onclick="resetDemo()">Reiniciar demo</button>
 </div></div>
+
+<a class="mbanner no-print" href="melhorias.html"><div class="wrap"><span class="mb-ic">✨</span><span><b>Melhorias</b> · veja o que mudou em relação ao app original e o que falta para ele funcionar</span><span class="mb-go">Ver →</span></div></a>
 
 <header class="top"><div class="wrap">
   <a class="logo" href="#/"><span class="mk">EFR</span><span><b>Europa Fora da Rota</b><small>Roteiros personalizados pela Europa</small></span></a>

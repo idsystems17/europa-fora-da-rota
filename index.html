@@ -1040,7 +1040,7 @@ function initMap(){
   const el=$('#map'); if(!el) return;
   if(!window.L){ el.innerHTML='<div class="loading" style="min-height:460px"><p class="muted">O mapa precisa de internet para carregar (Leaflet + OpenStreetMap).</p></div>'; return; }
   if(MAP){ MAP.remove(); MAP=null; }
-  MAP=L.map(el,{scrollWheelZoom:false}); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(MAP);
+  MAP=L.map(el,{scrollWheelZoom:false}); L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'© OpenStreetMap · © CARTO'}).addTo(MAP);
   const ps=PLACES.filter(p=>!MAPF||p.cc===MAPF), pts=[];
   ps.forEach(p=>{ const own=has(p.cc), c=ll(p); pts.push(c);
     L.circleMarker(c,{radius:own?8:6,color:'#fff',weight:2,fillColor:own?'#0F7B8B':'#a7b0b3',fillOpacity:1}).addTo(MAP)

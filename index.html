@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{
   --teal:#0F7B8B; --teal-d:#0b5f6b; --teal-l:#e2f2f3; --orange:#F2A03D; --orange-d:#d98a28;
@@ -235,9 +234,10 @@ select.sel{font:inherit;font-size:13.5px;border:1px solid var(--line);border-rad
 .pay{display:flex;gap:6px;flex-wrap:wrap}
 
 /* map */
-#map{height:460px;border-radius:var(--r);border:1px solid var(--line);background:#e8eef0;z-index:1}
-.leaflet-popup-content{font-family:Figtree,sans-serif;font-size:13.5px}
-.leaflet-popup-content b{font-family:Fraunces,serif;font-size:15px}
+#map{height:480px;border-radius:var(--r);border:1px solid var(--line);background:#cfe6ea;overflow:hidden}
+#map svg{width:100%;height:100%;display:block}
+#map circle:hover{stroke:#13323a}
+@media (max-width:560px){#map{height:380px}}
 
 /* forms */
 .field{display:flex;flex-direction:column;gap:6px}
@@ -344,7 +344,6 @@ footer.ft .row a:hover{color:var(--teal)}
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="dlg" id="dlg"></div></div>
 <div class="toast" id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 /* ============================== ÍCONES ============================== */
 const IC = {
@@ -1025,27 +1024,55 @@ function vRoteiros(){
 function delTrip(id){ S.trips=S.trips.filter(t=>t.id!==id); save(); render(); toast('Roteiro excluído'); }
 
 /* ---------- Mapa ---------- */
-let MAPF=null, MAP=null, LAYER=null;
+let MAPF=null;
 function vMapa(){
   return `<section class="sec"><div class="wrap">
     <h1>Mapa</h1><p class="muted" style="margin-top:6px">Todos os lugares do EFR aparecem no mapa. Nos destinos que você já tem, toque para abrir a navegação. ${NOVO('Mapa mostra todos os pontos, não só 2')}</p>
     <div class="frow" style="margin:16px 0"><button class="chip ${!MAPF?'on':''}" onclick="MAPF=null;render()">Todos</button>${CC_ORDER.map(cc=>`<button class="chip ${MAPF===cc?'on':''}" onclick="MAPF='${cc}';render()">${COUNTRIES[cc].name}${has(cc)?' ✓':''}</button>`).join('')}</div>
     <div class="row small muted" style="margin-bottom:10px;gap:16px"><span class="row" style="gap:6px"><i style="width:12px;height:12px;border-radius:50%;background:var(--teal);display:inline-block"></i>Acesso liberado</span><span class="row" style="gap:6px"><i style="width:12px;height:12px;border-radius:50%;background:#a7b0b3;display:inline-block"></i>Disponível na compra do país</span></div>
-    <div id="map"></div>
+    <div id="map">${mapSvg()}</div>
+    <p class="xs muted" style="margin-top:6px">Mapa ilustrativo do mockup. No app final, entra um mapa real com zoom.</p>
+    ${selCard()}
     <h2 style="margin:28px 0 4px">Lugares selecionados</h2><p class="muted small">Toque para abrir a navegação.</p>
     <div class="list" style="margin-top:12px">${PLACES.filter(p=>(!MAPF||p.cc===MAPF)&&has(p.cc)).slice(0,30).map(p=>`<div class="item"><div><b>${esc(p.name)}</b><div class="muted small">${COUNTRIES[p.cc].name} · ${esc(p.city)}</div></div><a class="btn btn-t btn-sm" href="${gmaps(p)}" target="_blank" rel="noopener">${ic('nav')}Abrir</a></div>`).join('')||`<div class="box"><p class="muted">Nenhum destino liberado ainda. <a class="link" href="#/loja">Ver a loja</a></p></div>`}</div>
   </div></section>`;
 }
-function initMap(){
-  const el=$('#map'); if(!el) return;
-  if(!window.L){ el.innerHTML='<div class="loading" style="min-height:460px"><p class="muted">O mapa precisa de internet para carregar (Leaflet + OpenStreetMap).</p></div>'; return; }
-  if(MAP){ MAP.remove(); MAP=null; }
-  MAP=L.map(el,{scrollWheelZoom:false}); L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'© OpenStreetMap · © CARTO'}).addTo(MAP);
-  const ps=PLACES.filter(p=>!MAPF||p.cc===MAPF), pts=[];
-  ps.forEach(p=>{ const own=has(p.cc), c=ll(p); pts.push(c);
-    L.circleMarker(c,{radius:own?8:6,color:'#fff',weight:2,fillColor:own?'#0F7B8B':'#a7b0b3',fillOpacity:1}).addTo(MAP)
-     .bindPopup(`<b>${esc(p.name)}</b><br>${esc(p.city)} · ${dur(p.dur)}<br>${own?`<a href="${gmaps(p)}" target="_blank">Abrir no Google Maps</a> · `:`<span style="color:#888">Endereço no acesso a ${COUNTRIES[p.cc].name}</span><br>`}<a href="#/lugar/${p.slug}">Ver lugar</a>`); });
-  if(pts.length) MAP.fitBounds(pts,{padding:[30,30],maxZoom:12});
+/* mapa ilustrativo em SVG (sem servidor de mapas): contornos aproximados, só para o mockup */
+const PX = (lon,lat) => [((lon+11)*27.6).toFixed(1), ((55.5-lat)*40).toFixed(1)];
+const poly = pts => pts.map(([lo,la])=>PX(lo,la).join(',')).join(' ');
+const LAND = [
+  [[-8.9,41.9],[-9.3,43],[-8,43.7],[-1.8,43.4],[-1.2,46],[-2.5,47.3],[-4.7,48.4],[-3,48.8],[-1.6,48.7],[-1.3,49.6],[0.2,49.5],[1.6,50.1],[1.8,51],[3.2,51.4],[4.2,52],[4.6,52.9],[5,53.4],[7,53.5],[8.6,53.9],[9,54.9],[10,54.4],[14,54],[19,54.4],[24,55.5],[50,56],[50,41],[29,41],[26,40.2],[24,37.5],[22,37],[20.5,39.5],[19.4,40.3],[19.5,41.8],[18,42.6],[15,44.5],[13.7,45.6],[12.3,45.2],[12.3,44.5],[13.6,43.5],[14.8,42],[16,41.5],[17.2,40.9],[18.5,40.1],[18.3,39.8],[17,40.5],[16.5,39.5],[17.1,39],[16.6,38.4],[15.6,38],[15.8,39.5],[15,40.2],[14.2,40.8],[13,41.2],[12.4,41.7],[11.1,42.4],[10.5,43],[10.2,43.9],[8.9,44.4],[7.5,43.8],[7.2,43.7],[6.2,43.1],[5.3,43.3],[4,43.5],[3.1,43.1],[3.2,41.9],[2.1,41.3],[0.9,41],[-0.3,39.5],[0.2,38.7],[-0.7,37.6],[-2.1,36.7],[-4.4,36.7],[-5.6,36],[-6.4,36.8],[-7.4,37.2],[-8.9,37],[-8.8,38.5],[-9.5,38.8],[-8.9,40.5]],
+  [[-5.7,50.1],[-3,50.6],[1.4,51.2],[1.7,52.7],[0.3,53.4],[-0.1,54.5],[-1.4,55.5],[-2,56.5],[-3.5,56.5],[-3.2,54.9],[-3.4,54.4],[-3,53.3],[-4.6,53.3],[-4.2,52.3],[-5.2,51.8],[-3.2,51.4],[-4.2,51.2]],
+  [[-6,52.2],[-6,53.9],[-5.5,55.3],[-8,55.3],[-10,54],[-10.3,51.8],[-8,51.6]],
+  [[9.4,43],[9.5,41.4],[8.6,41.6],[8.6,42.6]],
+  [[9.7,41.1],[9.6,39],[8.4,39],[8.2,40.9]],
+  [[12.4,38.1],[15.6,38.2],[15.1,36.7],[12.6,37.6]],
+  [[-12,34],[-12,35.5],[-6,35.8],[-5.3,35.9],[-2,35.1],[3,36.8],[10,37.3],[11,37],[20,33],[-12,33]],
+];
+const LABELS = {es:[-4.3,39.4],pt:[-7.4,40.3],fr:[2.4,46.9],it:[12.9,42.3],gb:[-1.4,52.6],be:[6.2,49.9],nl:[6.9,52.8]};
+let SEL=null;
+const pinLL = p => { const c=CITY_LL[p.city]||[48,6], h=hash(p.slug); return [c[1]+(((h>>7)%89)/89-.5)*.36, c[0]+((h%97)/97-.5)*.24]; };
+function mapSvg(){
+  const ps=PLACES.filter(p=>!MAPF||p.cc===MAPF);
+  let vb=[0,0,828,800];
+  if(MAPF){ const xy=ps.map(p=>PX(...pinLL(p)).map(Number)), xs=xy.map(a=>a[0]), ys=xy.map(a=>a[1]);
+    let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys); const w=Math.max(x1-x0,90), h=Math.max(y1-y0,90), cx=(x0+x1)/2, cy=(y0+y1)/2;
+    vb=[cx-w*.75,cy-h*.75,w*1.5,h*1.5]; }
+  const k=vb[2]/828, r=Math.max(2.2,7*k), fs=Math.max(7,15*k);
+  const cities = MAPF?[...new Set(ps.map(p=>p.city))]:[];
+  return `<svg viewBox="${vb.map(n=>n.toFixed(1)).join(' ')}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mapa ilustrativo dos lugares">
+    <rect x="-3000" y="-3000" width="7000" height="7000" fill="#cfe6ea"/>
+    ${LAND.map(l=>`<polygon points="${poly(l)}" fill="#f6f1e4" stroke="#c9bfa6" stroke-width="${1.2*k}" stroke-linejoin="round"/>`).join('')}
+    ${MAPF?'':Object.entries(LABELS).map(([cc,[lo,la]])=>{const [x,y]=PX(lo,la);return `<text x="${x}" y="${y}" text-anchor="middle" font-family="Fraunces,serif" font-weight="600" font-size="${fs}" fill="#7a6f58">${COUNTRIES[cc].name}</text>`}).join('')}
+    ${cities.map(c=>{const [x,y]=PX(CITY_LL[c][1],CITY_LL[c][0]);return `<text x="${x}" y="${(+y-r*2.2).toFixed(1)}" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="600" font-size="${fs*.8}" fill="#13323a" stroke="#f6f1e4" stroke-width="${fs*.25}" paint-order="stroke">${esc(c)}</text>`}).join('')}
+    ${ps.map(p=>{const [x,y]=PX(...pinLL(p)), own=has(p.cc), on=SEL===p.slug;return `<circle cx="${x}" cy="${y}" r="${on?r*1.6:r}" fill="${on?'#F2A03D':own?'#0F7B8B':'#a7b0b3'}" stroke="#fff" stroke-width="${r*.35}" style="cursor:pointer" onclick="SEL='${p.slug}';render()"><title>${esc(p.name)} · ${esc(p.city)}</title></circle>`}).join('')}
+  </svg>`;
+}
+function selCard(){
+  const p=BY[SEL]; if(!p||(MAPF&&p.cc!==MAPF)) return `<p class="muted small" style="margin-top:10px">Toque num ponto para ver o lugar.</p>`;
+  const own=has(p.cc);
+  return `<div class="box row between" style="margin-top:12px"><div><b class="serif" style="font-size:17px">${esc(p.name)}</b><div class="muted small">${COUNTRIES[p.cc].name} · ${esc(p.city)} · ${dur(p.dur)}</div>${own?'':`<div class="xs muted" style="margin-top:4px">${ic('lock')} Endereço e navegação no acesso a ${COUNTRIES[p.cc].name}</div>`}</div>
+    <div class="row">${own?`<a class="btn btn-t btn-sm" href="${gmaps(p)}" target="_blank" rel="noopener">${ic('nav')}Abrir no Maps</a>`:''}<a class="btn btn-g btn-sm" href="#/lugar/${p.slug}">Ver lugar</a></div></div>`;
 }
 
 /* ---------- Conta ---------- */
@@ -1161,8 +1188,6 @@ function render(){
   const navR = r==='roteiro'||r==='criar'?'roteiros':r==='pais'||r==='lugar'?'explorar':r;
   document.querySelectorAll('[data-r]').forEach(a=>a.classList.toggle('on',a.dataset.r===navR&&!a.classList.contains('shop')));
   if(r==='explorar') renderResults();
-  if(r==='mapa') setTimeout(initMap,0);
-  else if(MAP){ MAP.remove(); MAP=null; }
 }
 let lastRoute='';
 window.addEventListener('hashchange',()=>{ const r=location.hash; if(r!==lastRoute){ lastRoute=r; render(); window.scrollTo(0,0); } });

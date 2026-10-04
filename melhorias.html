@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>EFR Pocket — o que mudou</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--teal:#0F7B8B;--teal-l:#e2f2f3;--orange:#F2A03D;--bg:#FBFAF6;--ink:#13323a;--muted:#5f6f74;--line:#e7e3d9;--red-l:#fbebe7;--red:#a8402c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Figtree,system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px}
+h1,h2{font-family:Fraunces,Georgia,serif;font-weight:600;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(28px,5vw,38px);line-height:1.15}
+h2{font-size:24px;margin:44px 0 6px}
+p{margin:0}
+.muted{color:var(--muted)}
+header{background:var(--teal);color:#fff;padding:40px 0 34px}
+header .eb{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+header p{color:#d7eef0;margin-top:10px;max-width:600px}
+.btn{display:inline-block;margin-top:20px;background:var(--orange);color:#2b1a05;font-weight:700;padding:11px 18px;border-radius:10px;text-decoration:none}
+.cmp{margin-top:16px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.cmp .row{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+.cmp .row:first-child{border-top:0}
+.cmp .row>div{padding:14px 16px}
+.cmp .old{background:#fcfbf8;color:var(--muted)}
+.cmp .hd{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.cmp .hd .old{color:var(--red)}
+.cmp .hd .new{color:var(--teal)}
+.cmp b{color:var(--ink)}
+.lbl{display:none;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+.box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-top:14px}
+.box h3{margin:0 0 8px;font-size:17px}
+ul{margin:0;padding-left:20px}
+li{margin:6px 0}
+.steps{counter-reset:s;list-style:none;padding:0;margin-top:14px}
+.steps li{counter-increment:s;position:relative;padding:14px 16px 14px 58px;background:#fff;border:1px solid var(--line);border-radius:14px;margin:10px 0}
+.steps li::before{content:counter(s);position:absolute;left:16px;top:14px;width:28px;height:28px;border-radius:50%;background:var(--teal-l);color:var(--teal);font:600 15px Fraunces,serif;display:grid;place-items:center}
+.who{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--teal-l);color:var(--teal);margin-left:6px;vertical-align:1px}
+.who.s{background:#fdf1df;color:#9a5b09}
+.same{background:var(--teal-l);border-color:#c5e3e6}
+footer{margin:48px 0 40px;font-size:14px;color:var(--muted)}
+@media (max-width:620px){
+  .cmp .row{grid-template-columns:1fr}
+  .cmp .row.hd{display:none}
+  .lbl{display:block}
+  .cmp .old .lbl{color:var(--red)}
+  .cmp .new .lbl{color:var(--teal)}
+}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="eb">EFR Pocket · reconstrução</div>
+  <h1>O que mudou no mockup e o que falta para o app funcionar</h1>
+  <p>O app original (rota-descoberta.lovable.app) foi refeito como mockup clicável, já com as melhorias que mais fazem diferença para quem viaja e para as vendas.</p>
+  <a class="btn" href="/">Abrir o mockup →</a>
+</div></header>
+
+<main class="wrap">
+
+<h2>Antes e depois</h2>
+<p class="muted">Lado esquerdo: como é no app original. Lado direito: como ficou no mockup.</p>
+<div class="cmp">
+  <div class="row hd"><div class="old">Como era</div><div class="new">Como ficou</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span><b>Pagamento quebrado:</b> o botão dizia "Pagamento temporariamente indisponível". Ninguém conseguia comprar.</div><div class="new"><span class="lbl">Como ficou</span>Compra com <b>Pix (QR code)</b> ou <b>cartão em até 3x</b>, liberando o país na hora.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>O roteiro era só uma lista, sem jeito de usar na rua.</div><div class="new"><span class="lbl">Como ficou</span><b>"Abrir no Google Maps"</b> em cada parada, e o <b>dia inteiro</b> abre como rota.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>Sem internet, não dava para ver o roteiro.</div><div class="new"><span class="lbl">Como ficou</span><b>Baixar em PDF</b> e <b>instalar no celular</b> para usar sem internet.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>O roteiro gerado era fixo.</div><div class="new"><span class="lbl">Como ficou</span><b>Roteiro editável:</b> trocar uma parada por outra parecida, mudar a ordem, passar para outro dia, remover ou adicionar. Os horários se ajustam sozinhos.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>Os horários apareciam sem explicação.</div><div class="new"><span class="lbl">Como ficou</span><b>Tempo de deslocamento</b> entre as paradas ("12 min a pé", "18 min de metrô").</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>O aviso de reserva ficava escondido no meio do texto.</div><div class="new"><span class="lbl">Como ficou</span>Selos de <b>"Reservar com antecedência"</b> e de <b>"Fecha às segundas"</b>.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>Vários lugares repetiam a mesma foto genérica do país.</div><div class="new"><span class="lbl">Como ficou</span>Espaço para <b>uma foto própria da Soraia por lugar</b>.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>Nenhuma ligação com o Instagram.</div><div class="new"><span class="lbl">Como ficou</span>Em cada lugar, <b>"Veja o Reels da Soraia sobre este lugar"</b>.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>O mapa mostrava só 2 pontos para quem não comprou.</div><div class="new"><span class="lbl">Como ficou</span>O mapa mostra <b>todos os lugares</b>: cinza = bloqueado, azul = liberado.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>A tela Explorar carregava os 120 lugares de uma vez.</div><div class="new"><span class="lbl">Como ficou</span>Mostra 24 por vez, com o botão <b>"Carregar mais"</b>.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>O selo "Mais vendido" aparecia em 4 produtos.</div><div class="new"><span class="lbl">Como ficou</span>O selo aparece <b>só no EFR Pocket Completo</b>.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>O app perguntava as preferências duas vezes (na conta e no questionário).</div><div class="new"><span class="lbl">Como ficou</span>O questionário <b>já vem preenchido</b> com as preferências da conta.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>"Salvar" e "Já visitei" não levavam a lugar nenhum.</div><div class="new"><span class="lbl">Como ficou</span>Os lugares <b>salvos e visitados aparecem em Minha conta</b>.</div></div>
+  <div class="row"><div class="old"><span class="lbl">Como era</span>—</div><div class="new"><span class="lbl">Como ficou</span>Novo bloco <b>"Perto daqui"</b> em cada lugar, com outros lugares da mesma cidade e o tempo até eles.</div></div>
+</div>
+
+<div class="box same">
+  <h3>O que continuou igual</h3>
+  <p>O visual (fontes, cor azul-petróleo, botão laranja), os textos da Soraia, as 11 perguntas do questionário, os preços (R$ 49,90 por país, combo Bélgica + Holanda R$ 89,90, Completo R$ 199) e a forma de montar o roteiro: sem IA, com 3, 4 ou 5 lugares por dia conforme o ritmo, começando às 09:30.</p>
+</div>
+
+<h2>O que o mockup ainda não é</h2>
+<p class="muted">Ele serve para ver e aprovar as telas. Por trás, ainda é tudo de mentira:</p>
+<div class="box"><ul>
+  <li><b>Login simulado:</b> qualquer pessoa "entra" sem senha.</li>
+  <li><b>Pagamento simulado:</b> nenhum dinheiro é cobrado, e o botão só finge que o Pix foi pago.</li>
+  <li><b>Sem banco de dados:</b> roteiros e compras ficam guardados só no navegador de quem testa.</li>
+  <li><b>Dados incompletos:</b> endereços, horários, Dicas EFR e fotos não existem no mockup, e a Espanha tem só uma amostra de 10 lugares.</li>
+  <li><b>Dados deduzidos:</b> a cidade de cada lugar, os selos de reserva, os dias em que fecha e a posição no mapa foram deduzidos para o mockup e precisam de conferência.</li>
+</ul></div>
+
+<h2>O que falta para ficar funcional</h2>
+<p class="muted">Em ordem. <span class="who s">Soraia</span> = depende dela · <span class="who">Dev</span> = parte técnica</p>
+<ol class="steps">
+  <li><b>Aprovar as telas</b> <span class="who s">Soraia</span><br><span class="muted">Navegar pelo mockup e dizer o que muda, o que sai e o que entra.</span></li>
+  <li><b>Recuperar o conteúdo</b> <span class="who s">Soraia</span><br><span class="muted">Endereços, horários, Dicas EFR, coordenadas e fotos estão no banco do app antigo (Lovable/Supabase). Se o acesso não voltar, é preciso juntar esse material de novo, numa planilha por exemplo, e incluir os lugares da Espanha que faltam (cerca de 56).</span></li>
+  <li><b>Conferir os dados deduzidos</b> <span class="who s">Soraia</span><br><span class="muted">Cidade de cada lugar, quais pedem reserva, dias em que fecham e quais são "fora da rota".</span></li>
+  <li><b>Abrir as contas que ficam no nome dela</b> <span class="who s">Soraia</span><br><span class="muted">Mercado Pago ou Stripe (para receber Pix e cartão), GitHub, Vercel, Supabase (banco e login) e, se quiser, um domínio próprio (ex.: efrpocket.com.br). Tudo fica no nome dela desde o início, para não acontecer de novo de perder o acesso.</span></li>
+  <li><b>Banco de dados e login com Google</b> <span class="who">Dev</span><br><span class="muted">Cadastro de lugares, contas, roteiros salvos e acessos comprados.</span></li>
+  <li><b>Pagamento de verdade</b> <span class="who">Dev</span><br><span class="muted">Pix e cartão, com liberação automática do país assim que o pagamento é confirmado, e o reembolso de 7 dias.</span></li>
+  <li><b>Área de administração</b> <span class="who">Dev</span><br><span class="muted">Uma tela para a Soraia cadastrar e editar lugares, fotos e dicas sozinha, sem depender de programador.</span></li>
+  <li><b>App no celular e uso sem internet</b> <span class="who">Dev</span><br><span class="muted">Instalar na tela inicial e abrir o roteiro salvo mesmo sem sinal.</span></li>
+  <li><b>Textos legais</b> <span class="who s">Soraia</span> <span class="who">Dev</span><br><span class="muted">A política de privacidade (LGPD) precisa ser escrita, porque a do app antigo não foi copiada.</span></li>
+  <li><b>Testes e lançamento</b> <span class="who s">Soraia</span> <span class="who">Dev</span><br><span class="muted">Fazer uma compra real de teste, gerar roteiros de vários países, testar no celular e só então divulgar no Instagram.</span></li>
+</ol>
+
+<footer>Mockup para revisão · outubro de 2026</footer>
+</main>
+</body>
+</html>
